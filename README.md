@@ -1,6 +1,9 @@
 # Data-Analysis-Capstone
 ## 공공 데이터를 이용한 농산물 가격 예측 시스템 개발
 소프트웨어융합학과 17학번 강성문
+> Library : XGBoost, LightGBM, Scikit-learn, Numpy, Pandas, Keras, etc 
+> 
+> Environment : Windows 10, Python 3.8
 ## 1. Overview
 ### 1.1. 과제 선정 배경
 - 인류의 생존에 필수적인 농산물은 우리와 떼어 놓을 수 없는 존재이며, 농산물의 가격은 소비하는 개인과 판매하는 농업인, 정부 모두에게 매우 중요하다. 특히, 코로나 사태가 지속되면서 부족한 농작물에 대한 수입이 어려워지면서 농산물 가격이 급등하기도 한다. 이에 따라, 기존의 데이터를 이용하여 미래의 농산물 가격을 예측하는 것은 정부의 농산물 수급 정책 수립에도 중요한 역할을 할 것이며 소비자와 농업인에게도 중요한 지표가 될 것이다.
@@ -10,7 +13,7 @@
 ### 1.3. 과제 목표
 - 입력받은 일자의 1주 뒤, 2주 뒤, 4주 뒤의 가격을 예측하는 것을 목표로 한다. 예를 들어, 2021년 12월 31일의 데이터를 입력으로 한다면, 1월 7일, 1월 14일, 1월 28일의 가격을 수치형으로 예측한다. 모델의 성능 평가 지표는 NMAE(Normalized Mean Absolute Error)를 사용하며, 해당 값이 0.2가 넘지 않게 하는 것을 목표로 한다.
 
-
+--------------------------
 ## 2. Dataset
 ### 2.1. 데이터 수집
 이번 프로젝트에서는 2016년 1월 1일부터 2020년 9월 28일까지의 데이터를 학습용 데이터셋으로 수집하며, 2020년 9월 29일 + 1week부터 2020년 11월 5일 + 4week 까지를 테스트 데이터셋으로 수집한다.
@@ -22,11 +25,17 @@
 #### 2.1.2. 농산물 거래량 및 가격 데이터 수집
 - 농넷에서 API Key를 발급받아 전국도매시장 거래정보 데이터를 수집한다.  
 - 농넷 | 농산물유통종합정보시스템: https://nongnet.or.kr
+--------------------------
 ### 2.2. 데이터 전처리
 #### 2.2.1. 농산물별 주산지 추출
 - 기상 데이터를 활용하기에 앞서 각 농산물별로 생산량이 가장 많은 주산지를 선정하고, 해당 지역의 기상 정보를 메인으로 사용한다.
 - 생산량은 앞서 수집한 농산물 거래정보 데이터에서 2019년의 1년치 생산량을 통해 정렬한다.
-- 주산지를 알았다면, 카카오맵 API를 이용하여 위도와 경도를 구하고 이에 맞는 기상 관측 지점을 찾는다. 
+- 주산지를 구한 뒤, 카카오맵 API를 이용하여 해당 주산지의 위도와 경도를 구하고 이에 맞는 기상 관측 지점을 찾는다. 
+####
+![image](https://user-images.githubusercontent.com/65675861/145563877-4a630869-e6b5-40e9-8351-ab9865634201.png)
+
+
+
 ###
 
 #### 2.2.2. 가격 및 거래량 데이터 전처리
@@ -36,12 +45,13 @@
 
 ###
 #### 2.2.3. 농산물별 전처리
-- 모델 학습을 위한 데이터셋을 생성하기 위해 농산물별로 1일전부터 28일전까지의 거래량과 가격, 기상 데이터를 시계열 데이터 처리에 적합하게 하나의 데이터프레임에서 포함하도록 한다.
+- 모델 학습을 위한 데이터셋을 생성하기 위해 농산물별로 1일전부터 28일전까지의 거래량과 가격, 기상 데이터를 시계열 데이터 처리에 적합한 형태의 데이터프레임으로 만든다.
 - 앞서 추출했던 농산물별 주산지 기상 관측 지점을 이용하여 농산물별로 다른 위치의 기상 데이터를 받아온다.
 - 다음은 배추의 전처리 예시이다.
 
 ![image](https://user-images.githubusercontent.com/65675861/145556300-202ad95a-df25-4478-8145-b040c26dec13.png)
 ###
+-----------------------------
 ### 2.3. 이상치 탐지 및 데이터 스케일링
 이상치 탐지 및 데이터 정규화는 이상치 인스턴스로 인해 모델의 예측 성능이 저하되는 것을 방지하기 위해서 진행한다. 하지만, XGBoost와 LightGBM의 트리 기반 앙상블 기법 모델들의 경우, 이상치와 정규화의 큰 영향을 받지 않는 것이 일반적이므로 해당 과정은 두 모델에 대해서는 진행하지 않는다.
 #### 2.3.1. 이상치 탐지
@@ -54,11 +64,69 @@
 #### 2.3.2. 데이터 스케일링
 - 이상치를 제거했다면, MinMaxScaling 혹은 StandardScaling을 통해 서로 범주가 천차만별인 특성들을 비슷하게 만들어 준다.
 - 해당 프로젝트에서는 두 방법 모두 적용하지만, 주로 MinMaxScaling의 성능이 더 좋게 나타난다.
-
+---------------------------
 ## 3. Model
-### 3.1 XGBoost
+> 모델 훈련에서는 마지막 28일의 데이터를 Validation Set으로 설정하고, 나머지 전체 데이터를 Train Set으로 설정하고 진행한다.
+### 3.1. XGBoost
 ![image](https://user-images.githubusercontent.com/65675861/145561136-388750c1-c40c-4304-ab9e-e13471a83cef.png)
 ####
 - GBM과 같은 Decision Tree 기반의 앙상블 모형
-- 시스템 최적화와 알고리즘으로 정형 데이터에서 뛰어난 성능을 보이는 모델 중 하나
-- 
+- 시스템 최적화와 알고리즘으로 정형 데이터에서 뛰어난 성능을 보이는 모델 중 하나이다.
+
+``` python
+'learning_rate': 0.01, 
+'max_depth': 6,
+'booster': 'gbtree', 
+'objective': 'reg:squarederror', 
+'max_leaves': 100,
+'colsample_bytree': 0.8,
+'subsample': 0.8,
+'num_boost_round' : 10000,
+'early_stopping_rounds' = 80,
+'seed':42
+```
+
+### 3.2. LightGBM
+![image](https://user-images.githubusercontent.com/65675861/145565361-27bc2075-920b-437a-9585-fe451ef07f9b.png)
+####
+- Gradient-based One-Side Sampling(GOSS)를 메인기술로 가중치가 작은 개체에 승수를 적용하여 데이터를 증폭시킨다.
+- Leaf-wise 방식을 채택하여 시간과 메모리 측면에서 XGBoost에 비해 효율적이다.  
+``` python
+'learning_rate': 0.01,
+'max_depth': 6, 
+'boosting': 'gbdt', 
+'objective': 'regression',  
+'is_training_metric': True, 
+'num_leaves': 100, 
+'feature_fraction': 0.8, 
+'bagging_fraction': 0.8, 
+'bagging_freq': 5, 
+'seed': 42,
+'num_threads': 8
+```
+
+### 3.3. LSTM
+![image](https://user-images.githubusercontent.com/65675861/145566421-4b91e92f-1843-4565-9093-3b3bcf460cc7.png)
+####
+- 긴 의존 기간을 필요로 하는 학습 수행 능력을 갖춘 모델
+- RNN과 유사하지만, Neural Network Layer 1개의 층 대신에 4개의 layer 존재
+- forget gate layer에서는 0과 1사이의 값을 전달받아 어떠한 정보를 잊어버릴지, 보존할지 정한다.
+> loss = mean_absolute_error 
+>
+> optimizer = SGD
+>
+> patience = 100 
+>
+> batch_size = 16
+> 
+> epoch = 10000
+``` python
+model_dict[f'{pum}_model_{week_num}'] = Sequential()
+model_dict[f'{pum}_model_{week_num}'].add(LSTM(16, 
+               input_shape=(train_feature.shape[1],train_feature.shape[2]), 
+               activation='relu', 
+               return_sequences=False)
+          )
+model_dict[f'{pum}_model_{week_num}'].add(Dense(8))
+model_dict[f'{pum}_model_{week_num}'].add(Dense(1)) # output -> 1
+```

@@ -71,7 +71,7 @@
 ![image](https://user-images.githubusercontent.com/65675861/145561136-388750c1-c40c-4304-ab9e-e13471a83cef.png)
 ####
 - GBM과 같은 Decision Tree 기반의 앙상블 모형
-- 시스템 최적화와 알고리즘으로 정형 데이터에서 뛰어난 성능을 보이는 모델 중 하나이다.
+- 시스템 최적화와 알고리즘으로 정형 데이터에서 뛰어난 성능을 보이는 모델 중 하나
 
 ``` python
 'learning_rate': 0.01, 
@@ -85,12 +85,12 @@
 'early_stopping_rounds' = 80,
 'seed':42
 ```
-
+---------------
 ### 3.2. LightGBM
 ![image](https://user-images.githubusercontent.com/65675861/145565361-27bc2075-920b-437a-9585-fe451ef07f9b.png)
 ####
-- Gradient-based One-Side Sampling(GOSS)를 메인기술로 가중치가 작은 개체에 승수를 적용하여 데이터를 증폭시킨다.
-- Leaf-wise 방식을 채택하여 시간과 메모리 측면에서 XGBoost에 비해 효율적이다.  
+- Gradient-based One-Side Sampling(GOSS)를 메인기술로 가중치가 작은 개체에 승수를 적용하여 데이터를 증폭
+- Leaf-wise 방식을 채택하여 시간과 메모리 측면에서 XGBoost에 비해 효율적
 ``` python
 'learning_rate': 0.01,
 'max_depth': 6, 
@@ -104,13 +104,13 @@
 'seed': 42,
 'num_threads': 8
 ```
-
+-----------------------
 ### 3.3. LSTM
 ![image](https://user-images.githubusercontent.com/65675861/145566421-4b91e92f-1843-4565-9093-3b3bcf460cc7.png)
 ####
 - 긴 의존 기간을 필요로 하는 학습 수행 능력을 갖춘 모델
 - RNN과 유사하지만, Neural Network Layer 1개의 층 대신에 4개의 layer 존재
-- forget gate layer에서는 0과 1사이의 값을 전달받아 어떠한 정보를 잊어버릴지, 보존할지 정한다.
+- forget gate layer에서는 0과 1사이의 값을 전달받아 어떠한 정보를 잊어버릴지, 보존할지 결정
 > loss = mean_absolute_error 
 >
 > optimizer = SGD
@@ -130,3 +130,28 @@ model_dict[f'{pum}_model_{week_num}'].add(LSTM(16,
 model_dict[f'{pum}_model_{week_num}'].add(Dense(8))
 model_dict[f'{pum}_model_{week_num}'].add(Dense(1)) # output -> 1
 ```
+--------------
+### 3.4. Ridge & Lasso & ElasticNet
+![image](https://user-images.githubusercontent.com/65675861/145705456-857acbc2-e4e5-4762-b6f8-426489add07d.png)
+####
+![image](https://user-images.githubusercontent.com/65675861/145705531-ef3ca9d1-0d5a-469b-a1c5-475f49e9ccfa.png)
+####
+![image](https://user-images.githubusercontent.com/65675861/145705549-a1a80b24-a86b-4af7-8161-1877892be430.png)
+
+####
+- RSS(Residual Sum of Squares)를 최소화하는 Linear Model에 추가로 L1 & L2 peanlty 부여
+- GridSearchCV를 통해 모델별 최적의 파라미터 탐색 진행
+``` python
+# Ridge
+parameters = {'alpha':np.logspace(-4, 0, 4)}
+model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(Ridge(), parameters, scoring='neg_mean_absolute_error',cv=10)
+
+# Lasso
+parameters = {'alpha':np.logspace(-4, 0, 4)}
+model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(Lasso(), parameters, scoring='neg_mean_absolute_error',cv=10)
+
+# ElasticNet
+parameters = {'alpha':np.logspace(-4, 0, 4), "l1_ratio" : np.arange(0.0,1.0,0.1)}
+model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(ElasticNet(), parameters, scoring='neg_mean_absolute_error',cv=10)
+```
+--------------

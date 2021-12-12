@@ -81,8 +81,8 @@
 'max_leaves': 100,
 'colsample_bytree': 0.8,
 'subsample': 0.8,
-'num_boost_round' : 10000,
-'early_stopping_rounds' = 80,
+'num_boost_round' : 10000, #early_stopping_rounds 설정되어 있으므로 크게 설정
+'early_stopping_rounds' = 80, 
 'seed':42
 ```
 ---------------
@@ -115,11 +115,11 @@
 >
 > optimizer = SGD
 >
-> patience = 100 
+> patience = 100
 >
 > batch_size = 16
 > 
-> epoch = 10000
+> epoch = 10000 # patience 설정되어 있으므로 크게 설정
 ``` python
 model_dict[f'{pum}_model_{week_num}'] = Sequential()
 model_dict[f'{pum}_model_{week_num}'].add(LSTM(16, 

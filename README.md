@@ -161,14 +161,14 @@ model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(ElasticNet(), parameters, s
 --------------
 ## 4.Result
 |Model|Details|NMAE|Note|
-|------|---|---|----|
+|----|-----|---|----|
 |LinearRegression|Default|0.297||
 |**XGBoost**|**Tuned Hyperparameters**|**0.168**||
 |**LigthGBM**|**Tuned Hyperparameters**|**0.184**||
 |**LSTM**|**16 - 8 - 1**|**0.219**|**SGD**|
 |LSTM|16 - 8 - 1|0.235|Adam|
 |LSTM|Stacking LSTM|0.283|SGD|
-|LSTM|Num of Hidden Layer = 2|0.267|SGD|
+|LSTM|Num of Hidden Layers : 2|0.267|SGD|
 |Ridge|Default|0.295||
 |Ridge|GridSearchCV|0.297|alpha : np.logspace(-4,0,4)|
 |Lasso|Default|0.287||

@@ -1,4 +1,4 @@
-# Data-Analysis-Capstone
+# Data-Analysis-Capstone (2021-2)
 ## 공공 데이터를 이용한 농산물 가격 예측 시스템 개발
 소프트웨어융합학과 17학번 강성문
 > Library : XGBoost, LightGBM, Scikit-learn, Numpy, Pandas, Keras, etc 

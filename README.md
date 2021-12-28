@@ -159,7 +159,7 @@ parameters = {'alpha':np.logspace(-4, 0, 4), "l1_ratio" : np.arange(0.0,1.0,0.1)
 model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(ElasticNet(), parameters, scoring='neg_mean_absolute_error',cv=10)
 ```
 --------------
-## 4.Result
+## 4. Result
 |Model|Details|NMAE|Note|
 |----|-----|---|----|
 |LinearRegression|Default|0.297||
@@ -177,7 +177,7 @@ model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(ElasticNet(), parameters, s
 |ElasticNet|GridSearchCV|0.285|alpha : np.logspace(-4,0,4) / l1_ratio : np.arange(0.0,1.0,0.1) |
 
 ---------------------
-## 5.Conclusion
+## 5. Conclusion
 ### 5.1. 결론 및 제언
 - 기상 관측 데이터와 농산물 거래 정보 데이터를 이용하여 21개의 작물에 대하여 농산물 가격 예측을 진행했다. 데이터 전처리와 모델별 파라미터 튜닝 등의 과정을 거쳤고, 정형 데이터 처리에서 성능이 좋다고 평가받는 XGBoost와 LightGBM의 트리기반 모델들이 가장 성능이 좋음을 확인했다. 
 - 다만, 21개 전체 작물에 대한 도메인적 지식이 전반적으로 부족했기에 특정 모델에 대한 세부적인 데이터 전처리는 진행하지 못한 것이 성능 향상에 어려움을 발생시켰다고 생각한다. 예를 들어, 특정 작물은 60일간의 생육 기간을 거치는데, 이번 프로젝트에서는 전체 모델에 대해 28일간의 기상 데이터를 사용했다. 따라서, 작물별로 세부 사항을 반영하여 데이터셋과 모델에 적용한다면 더 좋은 성능의 모델을 개발할 수 있을 것이다. 
@@ -188,5 +188,5 @@ model_dict[f'{pum}_model_{week_num}'] = GridSearchCV(ElasticNet(), parameters, s
 - 이를 기관에서 활용하는 경우, 유가와 수출입량 및 물가 상승률 등을 복합적으로 고려하여 특정 작물 모델링에 집중한다면 더욱 성능이 좋은 모델 수립이 가능할 것으로 보인다.
 
 ---------------
-## 6.Refrence 
+## 6. Reference 
 신성호 · 이미경 · 송사광, 「LSTM 네트워크를 활용한 농산물 가격 예측 모델」,『한국콘텐츠학회논문지』 18(11), 한국콘텐츠학회, 2018, pp.416~429. https://doi.org/10.5392/JKCA.2018.18.11.416
